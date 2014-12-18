@@ -124,7 +124,7 @@ EOF
                 ,
                 addslashes($locale),
                 var_export($this->catalogues[$locale]->all(), true),
-                addslashes($fallbackContent)
+                $fallbackContent
             );
 
             $cache->write($content, $this->catalogues[$locale]->getResources());
