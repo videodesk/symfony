@@ -104,7 +104,7 @@ class Translator extends BaseTranslator
 \$catalogue->addFallbackCatalogue(new MessageCatalogue('%s', %s));
 EOF
                     ,
-                    $fallback,
+                    addslashes($fallback),
                     var_export($this->catalogues[$fallback]->all(), true)
                 );
             }
@@ -122,9 +122,9 @@ return \$catalogue;
 
 EOF
                 ,
-                $locale,
+                addslashes($locale),
                 var_export($this->catalogues[$locale]->all(), true),
-                $fallbackContent
+                addslashes($fallbackContent)
             );
 
             $cache->write($content, $this->catalogues[$locale]->getResources());
