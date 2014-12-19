@@ -81,6 +81,8 @@ class Translator extends BaseTranslator
      */
     protected function loadCatalogue($locale)
     {
+        $this->assertValidLocale($locale);
+        
         if (isset($this->catalogues[$locale])) {
             return;
         }
@@ -104,7 +106,7 @@ class Translator extends BaseTranslator
 \$catalogue->addFallbackCatalogue(new MessageCatalogue('%s', %s));
 EOF
                     ,
-                    addslashes($fallback),
+                    $fallback,
                     var_export($this->catalogues[$fallback]->all(), true)
                 );
             }
@@ -122,7 +124,7 @@ return \$catalogue;
 
 EOF
                 ,
-                addslashes($locale),
+                $locale,
                 var_export($this->catalogues[$locale]->all(), true),
                 $fallbackContent
             );

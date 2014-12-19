@@ -71,6 +71,8 @@ class Translator implements TranslatorInterface
      */
     public function addResource($format, $resource, $locale, $domain = 'messages')
     {
+        $this->assertValidLocale($locale);
+        
         $this->resources[$locale][] = array($format, $resource, $domain);
 
         unset($this->catalogues[$locale]);
@@ -83,6 +85,8 @@ class Translator implements TranslatorInterface
      */
     public function setLocale($locale)
     {
+        $this->assertValidLocale($locale);
+        
         $this->locale = $locale;
     }
 
@@ -105,6 +109,8 @@ class Translator implements TranslatorInterface
      */
     public function setFallbackLocale($locale)
     {
+        $this->assertValidLocale($locale);
+        
         // needed as the fallback locale is used to fill-in non-yet translated messages
         $this->catalogues = array();
 
@@ -120,6 +126,8 @@ class Translator implements TranslatorInterface
     {
         if (!isset($locale)) {
             $locale = $this->getLocale();
+        } else {
+            $this->assertValidLocale($locale);
         }
 
         if (!isset($this->catalogues[$locale])) {
@@ -193,6 +201,20 @@ class Translator implements TranslatorInterface
 
         if ($fallback != $locale) {
             $this->catalogues[$locale]->addFallbackCatalogue($this->catalogues[$fallback]);
+        }
+    }
+    
+    /**
+     * Asserts that the locale is valid, throws an Exception if not.
+     *
+     * @param string $locale Locale to tests
+     *
+     * @throws \InvalidArgumentException If the locale contains invalid characters
+     */
+    protected function assertValidLocale($locale)
+    {
+        if (0 !== preg_match('/[^a-z0-9_\\.\\-]+/i', $locale, $match)) {
+            throw new \InvalidArgumentException(sprintf('Invalid locale: %s.', $locale));
         }
     }
 }
